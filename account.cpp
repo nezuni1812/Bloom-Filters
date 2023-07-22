@@ -31,7 +31,7 @@ bool checkPassword (Account acc) {
     }
 
     //Gắn cờ cho uppercase, lowercase, số và ký tự đặc biệt/ khoảng trắng
-    bool upper = false, lower = false, num = false, specialchar = false, space = false;
+    bool upper = false, lower = false, num = false, specialchar = false;
     for (int i = 0; i < acc.password.length(); i++) {
         if (acc.password[i] >= 'A' && acc.password[i] <= 'Z')
             upper = true;
