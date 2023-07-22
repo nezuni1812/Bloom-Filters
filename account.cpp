@@ -16,6 +16,8 @@ bool checkUsername(string user) {
         }
         
     //Chưa code phần check xem có username trùng hay không
+
+    return true;
 }
 
 bool checkPassword (Account acc) {
@@ -50,12 +52,13 @@ bool checkPassword (Account acc) {
                         specialchar = true;
     }
 
-    if (!upper && !lower && !num && !specialchar) {
+    if (!upper || !lower || !num || !specialchar) {
         cout << "Your password must contain uppercase, lowercase, numbers and special characters.\n";
         return false;
     }
     
     //Chưa code weak password
+    return true;
 }
 
 Account checkRegister() {
