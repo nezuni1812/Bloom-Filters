@@ -1,4 +1,8 @@
-//Nhập username và password xong kiểm tra
+/*Thiếu database
+Cần tạo database để lưu account và sửa password trong database
+Cần lấy dữ liệu từ database để check username trùng, check weak password
+*/
+
 #include "header.h"
 
 bool checkUsername(string user) {
