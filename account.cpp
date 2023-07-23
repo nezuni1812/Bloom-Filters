@@ -17,6 +17,7 @@ bool checkUsername(string user) {
         
     //Chưa code phần check xem có username trùng hay không
 
+    
     return true;
 }
 
@@ -35,8 +36,10 @@ bool checkPassword (Account acc) {
     //Gắn cờ cho uppercase, lowercase, số và ký tự đặc biệt/ khoảng trắng
     bool upper = false, lower = false, num = false, specialchar = false;
     for (int i = 0; i < acc.password.length(); i++) {
-        if (acc.password[i] >= 'A' && acc.password[i] <= 'Z')
-            upper = true;
+        if (acc.password[i] == ' ') {
+            cout << "Your password must not contain any space.\n";
+            return false;
+        }
         else 
             if (acc.password[i] >= 'a' && acc.password[i] <= 'z')
                 lower = true;
@@ -44,10 +47,8 @@ bool checkPassword (Account acc) {
                 if (acc.password[i] >= '0' && acc.password[i] <= '9')
                     num = true;
                 else 
-                    if (acc.password[i] == ' ') {
-                        cout << "Your password must not contain any space.\n";
-                        return false;
-                    }
+                    if (acc.password[i] >= 'A' && acc.password[i] <= 'Z') 
+                        upper = true;
                     else     
                         specialchar = true;
     }
@@ -56,35 +57,44 @@ bool checkPassword (Account acc) {
         cout << "Your password must contain uppercase, lowercase, numbers and special characters.\n";
         return false;
     }
-    
+
     //Chưa code weak password
     return true;
 }
 
-Account checkRegister() {
-    Account acc;
-    cout << "Username: ";
-    cin >> acc.username;
-    cout << "Password: ";
-    cin >> acc.password;
-
-    while (!checkUsername(acc.username) && !checkPassword(acc)) {
-        cout << "Please re-enter your username and password!\n\n";
-        cout << "Username: ";
-        cin >> acc.username;
-        cout << "Password: ";
-        cin >> acc.username;
+bool checkRegister(Account acc) {
+    if (checkUsername(acc.username) && checkPassword(acc)) {
+        cout << "You have successfully registered!\n";
+        return true;
     }
-
-    return acc;
+    return false;
 }
 
 //Đẩy account đã đăng ký thành công vào file, gọi hàm này khi thao tác chức năng đăng ký
-void Registeration() {
-    Account acc = checkRegister();
-    //Đẩy account vào file
+void Registration() {
+    Account acc;
+    cout << "Username: ";
+    getline(cin, acc.username, '\n');
+    cout << "Password: ";
+    getline(cin, acc.password, '\n');
 
+    ofstream ofs("Fail.txt", ios::app);
+    while (!checkRegister(acc)) {
+        ofs << acc.username << " " << acc.password << endl;
+
+        cout << "\nPlease re-enter your username and password!\n";
+        cout << "Username: ";
+        getline(cin, acc.username, '\n');
+        cout << "Password: ";
+        getline(cin, acc.password, '\n');
+    }
+    ofs.close();
+
+    //Đẩy account vào file
+    ofstream out("SignUp.txt", ios::app);
+    out << acc.username << " " << acc.password << endl;
+    out.close();
 
     //
-    cout << "You have successfully registered!\n";
+
 }
