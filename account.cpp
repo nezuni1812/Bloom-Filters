@@ -94,7 +94,4 @@ void Registration() {
     ofstream out("SignUp.txt", ios::app);
     out << acc.username << " " << acc.password << endl;
     out.close();
-
-    //
-
 }
