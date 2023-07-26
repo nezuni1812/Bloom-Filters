@@ -33,23 +33,21 @@ void insertBloom(string a, int filter[], int n){
     filter[pos3] = 1;
 }
 
-void loadAllData(string fileName, vector<string> &names){
+void loadAllData(string fileName, vector<Account> &names){
     ifstream in(fileName.c_str());
     
-    int idx = 0;
-    string temp;
-    while (in >> temp){
-        names.push_back(temp);
-        getline(in, temp);
-        idx++;
+    Account acc;
+    while (in >> acc.username){
+        in >> acc.password;
+        names.push_back(acc);
     }
     
     in.close();
 }
 
-void initBloomFilter(int filter[], int n, vector<string> data){
+void initBloomFilter(int filter[], int n, vector<Account> data){
     for (int i = 0; i < data.size(); i++)
-        insertBloom(data[i], filter, n);
+        insertBloom(data[i].username, filter, n);
 }
 
 string toLower(string a){
@@ -126,16 +124,17 @@ bool checkPassword (Account acc) {
                         specialchar = true;
     }
 
-    if (!upper || !lower || !num || !specialchar || doContain(acc.password, acc.username)) {
-        cout << "Your password must contain uppercase, lowercase, numbers and special characters and must not contain your username.\n";
+    if (!upper || !lower || !num || !specialchar) {
+        cout << "Your password must contain uppercase, lowercase, numbers and special characters.\n";
         return false;
     }
 
-    //Chưa code weak password
+    
+
     return true;
 }
 
-bool checkRegister(Account acc, int filter[], int n) {
+bool checkRegister(Account &acc, int filter[], int n) {
     if (checkUsername(acc.username, filter, n) && checkPassword(acc)) {
         cout << "You have successfully registered!\n";
         acc.isLoggedIn = true;
@@ -146,7 +145,6 @@ bool checkRegister(Account acc, int filter[], int n) {
 
 //Đẩy account đã đăng ký thành công vào file, gọi hàm này khi thao tác chức năng đăng ký
 void Registration(Account &acc, int filter[], int n) {
-    cin.ignore();
     cout << "Username: ";
     getline(cin, acc.username, '\n');
     cout << "Password: ";
@@ -167,7 +165,44 @@ void Registration(Account &acc, int filter[], int n) {
     //Đẩy account vào file
     ofstream out("SignUp.txt", ios::app);
     out << acc.username << " " << acc.password << endl;
+    // cin.ignore();
     out.close();
+    
+    cout << "Ket thuc registration\n";
+}
+
+void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> allUsers){
+    cout << "Input the amount of registration: ";
+    int amount;
+    cin >> amount;
+    
+    for (int i = 0; i < amount; i++)
+        Registration(acc, filter, n);
+        
+    
+}
+
+void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers){
+    cout << "Welcome to login screen.\n";
+    cout << "Name: " << acc.username << endl;
+    cout << "Pass: " << acc.password << endl;
+    cout << "isLoggedIn: " << acc.isLoggedIn << endl;
+    cout << "Input your username: ";
+    cin >> acc.username;
+    cout << "Input your password: ";
+    cin >> acc.password;
+    
+    if (!checkHash(acc.username, filter, n)){
+        cout << "Not on our database.\n";
+        return;
+    }
+    
+    for (int i = 0; i < allUsers.size(); i++)
+        if (acc.username == allUsers[i].username && acc.password == allUsers[i].password){
+            cout << "Login successfully.\n";
+            acc.password = allUsers[i].password;
+            acc.isLoggedIn = true;
+        }
 }
 
 void changePassword(Account &acc, int filter[], int n){
@@ -178,34 +213,42 @@ void changePassword(Account &acc, int filter[], int n){
     
     string password;
     cout << "Input your new password: ";
-    cin >> password;
+    password = acc.password;
+    cin >> acc.password;
     
-    while (!checkRegister(acc, filter, n)) {
-        // ofs << acc.username << " " << acc.password << endl;
+    while (!checkPassword(acc)) {
 
         cin.ignore();
-        cout << "\nPlease re-enter your username and password!\n";
-        // cout << "Username: ";
-        // getline(cin, acc.username, '\n');
+        cout << "\nPlease re-enter your password!\n";
         cout << "Password: ";
+        password = acc.password;
         getline(cin, acc.password, '\n');
     }
     
     string allContent = "";
     string individualLine = "";
-    fstream file("SignUp.txt", ios::in | ios::out);
+    fstream file("SignUp.txt", ios::in);
     while (getline(file, individualLine)){
-        if (individualLine.find(acc.username) != string::npos)
-            individualLine.replace(individualLine.find(acc.password), acc.password.size(), password);
+        // cout << individualLine << endl;
+        if (individualLine.find(acc.username) != string::npos){
+            cout << individualLine.find(password) << "\n";
+            individualLine.replace(individualLine.find(password), password.size(), acc.password);
+            cout << "Password found\n";
+        }
             
-        cout << individualLine << "\n";
+        cout << ">>" << individualLine << "<<\n";
         
         if (individualLine != "\n")
             allContent += individualLine + "\n";
         
     }
     
+    file.close();
+    
+    file.open("SignUp.txt", ios::out);
+    
     file << allContent;
+    cout << allContent << "\n";
     
     file.close();
     
