@@ -145,8 +145,8 @@ bool checkRegister(Account acc, int filter[], int n) {
 }
 
 //Đẩy account đã đăng ký thành công vào file, gọi hàm này khi thao tác chức năng đăng ký
-void Registration(int filter[], int n) {
-    Account acc;
+void Registration(Account &acc, int filter[], int n) {
+    cin.ignore();
     cout << "Username: ";
     getline(cin, acc.username, '\n');
     cout << "Password: ";
@@ -170,11 +170,44 @@ void Registration(int filter[], int n) {
     out.close();
 }
 
-void changePassword(Account acc){
+void changePassword(Account &acc, int filter[], int n){
     if (!acc.isLoggedIn){
         cout << "You haven't logged in yet.\n";
         return;
     }
     
-    // Place to put more code
+    string password;
+    cout << "Input your new password: ";
+    cin >> password;
+    
+    while (!checkRegister(acc, filter, n)) {
+        // ofs << acc.username << " " << acc.password << endl;
+
+        cin.ignore();
+        cout << "\nPlease re-enter your username and password!\n";
+        // cout << "Username: ";
+        // getline(cin, acc.username, '\n');
+        cout << "Password: ";
+        getline(cin, acc.password, '\n');
+    }
+    
+    string allContent = "";
+    string individualLine = "";
+    fstream file("SignUp.txt", ios::in | ios::out);
+    while (getline(file, individualLine)){
+        if (individualLine.find(acc.username) != string::npos)
+            individualLine.replace(individualLine.find(acc.password), acc.password.size(), password);
+            
+        cout << individualLine << "\n";
+        
+        if (individualLine != "\n")
+            allContent += individualLine + "\n";
+        
+    }
+    
+    file << allContent;
+    
+    file.close();
+    
+    cout << "Password changed successfully.\n";
 }

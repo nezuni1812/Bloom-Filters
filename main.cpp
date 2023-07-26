@@ -10,5 +10,26 @@ int main() {
     loadAllData("SignUp.txt", userNames);
     initBloomFilter(bloomFilter, n, userNames);
     
-    Registration(bloomFilter, n);
+    int mode = 0;
+    Account acc;
+    while (mode != -1){
+        cout << "Choose a mode\n"
+        "1 for Register\n"
+        "2 for Changing password\n";
+        cin >> mode;
+        
+        if (mode == -1)
+            break;
+        
+        switch (mode){
+            case 1:
+                Registration(acc, bloomFilter, n);
+                break;
+            case 2:
+                changePassword(acc, bloomFilter, n);
+                break;
+                
+        }
+    }
+    
 }
