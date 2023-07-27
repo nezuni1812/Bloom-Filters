@@ -6,6 +6,8 @@ Cần lấy dữ liệu từ database để check username trùng, check weak pa
 #include "header.h"
 
 // Reference: https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
+// Hashing cho bit array: nhận một string -> return một hash
+// Thay đổi số p để đưa ra các hash khác nhau
 int polyNominalRollingHashing(string a, long n, long long p = 19, bool debug = false){
     unsigned long long hash = 0;
     for (int i = 0; i < a.size(); i++){
@@ -13,18 +15,20 @@ int polyNominalRollingHashing(string a, long n, long long p = 19, bool debug = f
         hash += toNum * pow(p, i);
         hash %= n;
         if (debug)
-            cout << a << ":" << hash << "\n";
+            cout << a[i] << ":" << hash << "\n";
     }
     
     return hash % n;
 }
 
+// Kiểm tra xem có phần tử trùng trong filter Bloom không
 bool checkHash(string a, int filter[],  int n){
     int pos1 = polyNominalRollingHashing(a, n, 19), pos2 = polyNominalRollingHashing(a, n, 23), pos3 = polyNominalRollingHashing(a, n, 7);
     
     return !(filter[pos1] == 0 || filter[pos2] == 0 || filter[pos3] == 0);
 }
 
+// Thêm một phần tử vào filter Bloom: đánh dấu thành bit 1 ở 3 vị trí trên bit array
 void insertBloom(string a, int filter[], int n){
     int pos1 = polyNominalRollingHashing(a, n), pos2 = polyNominalRollingHashing(a, n, 23), pos3 = polyNominalRollingHashing(a, n, 7);
     
@@ -33,7 +37,8 @@ void insertBloom(string a, int filter[], int n){
     filter[pos3] = 1;
 }
 
-void loadAllData(string fileName, vector<Account> &names){
+// Lấy thông tin User từ file -> vector
+void loadAllUser(string fileName, vector<Account> &names){
     ifstream in(fileName.c_str());
     
     Account acc;
@@ -45,11 +50,32 @@ void loadAllData(string fileName, vector<Account> &names){
     in.close();
 }
 
-void initBloomFilter(int filter[], int n, vector<Account> data){
+// Lấy thông tin Weak password từ file -> vector
+void loadAllWeakPassword(string fileName, vector<string> &pass){
+    ifstream in(fileName.c_str());
+    
+    string temp;
+    while (in >> temp){
+        if (temp != "")
+            pass.push_back(temp);
+    }
+    
+    in.close();
+}
+
+// Khởi tạo bit array bằng vector chứa tất cả User
+void initUserFilter(int filter[], int n, vector<Account> data){
     for (int i = 0; i < data.size(); i++)
         insertBloom(data[i].username, filter, n);
 }
 
+// Khởi tạo bit array bằng vector chứa tất cả Weak password
+void initPassFilter(int filter[], int n, vector<string> data){
+    for (int i = 0; i < data.size(); i++)
+        insertBloom(data[i], filter, n);
+}
+
+// Viết thường
 string toLower(string a){
     string temp = "";
     
@@ -92,7 +118,7 @@ bool doContain(string whole, string inside){
     return true;
 }
 
-bool checkPassword (Account acc) {
+bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> weakPass) {
     //Check độ dài
     if (acc.password.length() <= 10 || acc.password.length() >= 20) {
         cout << "Your password must be longer than 10 characters and shorter than 20 characters.\n";
@@ -129,13 +155,21 @@ bool checkPassword (Account acc) {
         return false;
     }
 
-    
+    if (checkHash(acc.password, weakPassFilter, n)){
+        for (int i = 0; i < weakPass.size(); i++){
+            // cout << "Weak password suspected.\n";
+            if (weakPass[i] == acc.password) {
+                cout << "Your password is a weak one.\n";
+                return false;
+            }
+        }
+    }
 
     return true;
 }
 
-bool checkRegister(Account &acc, int filter[], int n) {
-    if (checkUsername(acc.username, filter, n) && checkPassword(acc)) {
+bool checkRegister(Account &acc, int userFilter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
+    if (checkUsername(acc.username, userFilter, n) && checkPassword(acc, weakPassFilter, nPass, weakPass)) {
         cout << "You have successfully registered!\n";
         acc.isLoggedIn = true;
         return true;
@@ -144,14 +178,14 @@ bool checkRegister(Account &acc, int filter[], int n) {
 }
 
 //Đẩy account đã đăng ký thành công vào file, gọi hàm này khi thao tác chức năng đăng ký
-void Registration(Account &acc, int filter[], int n) {
+void Registration(Account &acc, int userFilter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
     cout << "Username: ";
     getline(cin, acc.username, '\n');
     cout << "Password: ";
     getline(cin, acc.password, '\n');
 
     ofstream ofs("Fail.txt", ios::app);
-    while (!checkRegister(acc, filter, n)) {
+    while (!checkRegister(acc, userFilter, n, accounts, weakPassFilter, nPass, weakPass)) {
         ofs << acc.username << " " << acc.password << endl;
 
         cout << "\nPlease re-enter your username and password!\n";
@@ -171,13 +205,13 @@ void Registration(Account &acc, int filter[], int n) {
     cout << "Ket thuc registration\n";
 }
 
-void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> allUsers){
+void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass){
     cout << "Input the amount of registration: ";
     int amount;
     cin >> amount;
     
     for (int i = 0; i < amount; i++)
-        Registration(acc, filter, n);
+        Registration(acc, filter, n,  accounts, weakPassFilter, nPass, weakPass);
         
     
 }
@@ -205,7 +239,7 @@ void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers){
         }
 }
 
-void changePassword(Account &acc, int filter[], int n){
+void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int nPass, vector<string> weakPass){
     if (!acc.isLoggedIn){
         cout << "You haven't logged in yet.\n";
         return;
@@ -216,7 +250,7 @@ void changePassword(Account &acc, int filter[], int n){
     password = acc.password;
     cin >> acc.password;
     
-    while (!checkPassword(acc)) {
+    while (!checkPassword(acc, weakPassFilter, nPass, weakPass)) {
 
         cin.ignore();
         cout << "\nPlease re-enter your password!\n";

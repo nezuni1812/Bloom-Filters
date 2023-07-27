@@ -4,12 +4,24 @@
 
 int main() {
     const int n = 500;
+    // Bộ lọc tên User
     int usernameFilter[n] = {0};
-    int usernameFilter[n] = {0};
+    // Bộ lọc Mật khẩu yếu
+    int weakPassFilter[n] = {0};
     
+    // Vector Account
     vector<Account> accounts;
-    loadAllData("SignUp.txt", accounts);
-    initBloomFilter(usernameFilter, n, accounts);
+    // Vector Mật khẩu yếu
+    vector<string> weakPass;
+    
+    loadAllUser("SignUp.txt", accounts);
+    initUserFilter(usernameFilter, n, accounts);
+    loadAllWeakPassword("Weak-Pass.txt", weakPass);
+    initPassFilter(weakPassFilter, n, weakPass);
+    
+    // cout << weakPass[0] << endl;
+    
+    // return 0;
     
     int mode = 0;
     Account acc;
@@ -27,18 +39,19 @@ int main() {
         
         switch (mode){
             case 1:
-                Registration(acc, usernameFilter, n);
+                Registration(acc, usernameFilter, n, accounts, weakPassFilter, n, weakPass);
                 break;
             case 2:
-                changePassword(acc, usernameFilter, n);
+                changePassword(acc, usernameFilter, n, weakPassFilter, n, weakPass);
                 break;
             case 4:
                 LogIn(acc, usernameFilter, n, accounts);
                 break;
             case 3:
-                MultipleRegistration(acc, usernameFilter, n, accounts);
+                // acc, usernameFilter, n,  accounts, weakPassFilter, n, weakPass
+                MultipleRegistration(acc, usernameFilter, n, accounts, weakPassFilter, n, weakPass);
                 break;
-        }
     }
+        }
     
 }
