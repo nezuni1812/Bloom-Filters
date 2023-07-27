@@ -199,7 +199,7 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> account
     //Đẩy account vào file
     ofstream out("SignUp.txt", ios::app);
     out << acc.username << " " << acc.password << endl;
-    // cin.ignore();
+    
     out.close();
     
     cout << "Ket thuc registration\n";
@@ -209,6 +209,7 @@ void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> acc
     cout << "Input the amount of registration: ";
     int amount;
     cin >> amount;
+    cin.ignore();
     
     for (int i = 0; i < amount; i++)
         Registration(acc, filter, n,  accounts, weakPassFilter, nPass, weakPass);

@@ -21,10 +21,6 @@ int main() {
     loadAllWeakPassword("Weak-Pass.txt", weakPass);
     initPassFilter(weakPassFilter, n, weakPass);
     
-    // cout << weakPass[0] << endl;
-    
-    // return 0;
-    
     int mode = 0;
     Account acc;
     while (mode != -1){
