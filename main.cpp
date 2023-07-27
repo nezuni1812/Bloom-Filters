@@ -6,11 +6,13 @@ int main() {
     const int n = 500;
     // Bộ lọc tên User
     int usernameFilter[n] = {0};
+    
     // Bộ lọc Mật khẩu yếu
     int weakPassFilter[n] = {0};
     
     // Vector Account
     vector<Account> accounts;
+    
     // Vector Mật khẩu yếu
     vector<string> weakPass;
     
