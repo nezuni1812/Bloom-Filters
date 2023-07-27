@@ -88,7 +88,7 @@ string toLower(string a){
     return temp;
 }
 
-bool checkUsername(string user, int filter[], int n) {
+bool checkUsername(string user, int filter[], int n, vector<Account> accounts) {
     //Check độ dài
     if (user.length() <= 5 || user.length() >= 10) {
         cout << "Your username must be longer than 5 characters and shorter than 10 characters.\n";
@@ -104,8 +104,11 @@ bool checkUsername(string user, int filter[], int n) {
         
     // Check username trùng
     if (checkHash(user, filter, n)){
-        cout << "Your username is already registered.\n";
-        return false;
+        for (int i = 0; i < accounts.size(); i++)
+            if (accounts[i].username == user){
+                cout << "Your username is already registered.\n";
+                return false;
+            }
     }
     
     return true;
@@ -169,7 +172,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
 }
 
 bool checkRegister(Account &acc, int userFilter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
-    if (checkUsername(acc.username, userFilter, n) && checkPassword(acc, weakPassFilter, nPass, weakPass)) {
+    if (checkUsername(acc.username, userFilter, n, accounts) && checkPassword(acc, weakPassFilter, nPass, weakPass)) {
         cout << "You have successfully registered!\n";
         acc.isLoggedIn = true;
         return true;
