@@ -1,8 +1,3 @@
-/*Thiếu database
-Cần tạo database để lưu account và sửa password trong database
-Cần lấy dữ liệu từ database để check username trùng, check weak password
-*/
-
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -12,34 +7,27 @@ Cần lấy dữ liệu từ database để check username trùng, check weak pa
 
 using namespace std;
 
-#include "Header.h"
+#include "header.h"
 #include "color.h"
 
 // Time before switching to a new screen
 int beforeSwitchScreen = 800;
 
 string errorColor = "#cf1717";
-
 string successColor = "#008022";
 
 // Reference: https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
 // Hashing cho bit array: nhận một string -> return một hash
 // Thay đổi số p để đưa ra các hash khác nhau
-int polyNominalRollingHashing(string a, long n, long long p = 19, bool debug = false){
+int polyNominalRollingHashing(string a, long n, long long p){
     long long hash = 0;
     long long power = 1;
     for (int i = 0; i < a.size(); i++){
         long long toNum = a[i];
         
-        hash = (hash + toNum * power)%n;
-        power = (power * p)%n;
-        // hash %= n;
-        if (debug)
-            cout << a[i] << ":" << pow(p, i) << "\n";
+        hash = (hash + toNum * power) % n;
+        power = (power * p) % n;
     }
-    
-    
-    // cout << "Hash with p = " << p << ": " << hash % n << "\n";
     return hash % n;
 }
 
@@ -97,19 +85,6 @@ void initPassFilter(int filter[], int n, vector<string> data){
         insertBloom(data[i], filter, n);
 }
 
-// Viết thường
-string toLower(string a){
-    string temp = "";
-    
-    for (int i = 0; i < a.size(); i++)
-        if ('A' <= a[i] && a[i] <= 'Z')
-            temp += a[i] + ' ';
-        else
-            temp += a[i];
-            
-    return temp;
-}
-
 bool checkUsername(string user, int filter[], int n, vector<Account> accounts) {
     //Check độ dài
     if (user.length() <= 5 || user.length() >= 10) {
@@ -136,22 +111,15 @@ bool checkUsername(string user, int filter[], int n, vector<Account> accounts) {
     return true;
 }
 
-bool doContain(string whole, string inside){
-    if (toLower(whole).find(toLower(inside)) != string::npos)
-        return false;
-        
-    return true;
-}
-
 bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> weakPass) {
     //Check độ dài
     if (acc.password.length() <= 10 || acc.password.length() >= 20) {
-        cout << "Your password must be longer than 10 characters and shorter than 20 characters.\n";
+        cout << "Your Password must be longer than 10 characters and shorter than 20 characters.\n";
         return false;
     }
 
     if (acc.password == acc.username) {
-        cout << "Your password can not be the same as your username.\n";
+        cout << "Your Password can not be the same as your Username.\n";
         return false;
     }
 
@@ -159,7 +127,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
     bool upper = false, lower = false, num = false, specialchar = false;
     for (int i = 0; i < acc.password.length(); i++) {
         if (acc.password[i] == ' ') {
-            cout << "Your password must not contain any space.\n";
+            cout << "Your Password must not contain any space.\n";
             return false;
         }
         else 
@@ -176,7 +144,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
     }
 
     if (!upper || !lower || !num || !specialchar) {
-        cout << "Your password must contain uppercase, lowercase, numbers and special characters.\n";
+        cout << "Your Password must contain uppercase, lowercase, numbers and special characters.\n";
         return false;
     }
 
@@ -184,7 +152,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
         for (int i = 0; i < weakPass.size(); i++){
             // cout << "Weak password suspected.\n";
             if (weakPass[i] == acc.password) {
-                cout << "Your password is a weak one.\n";
+                cout << "Your Password is a weak one.\n";
                 return false;
             }
         }
@@ -195,7 +163,6 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
 
 bool checkRegister(Account &acc, int userFilter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
     if (checkUsername(acc.username, userFilter, n, accounts) && checkPassword(acc, weakPassFilter, nPass, weakPass)) {
-        cout << dye(successColor, "You have successfully registered!\n");
         acc.isLoggedIn = true;
         return true;
     }
@@ -205,7 +172,7 @@ bool checkRegister(Account &acc, int userFilter[], int n, vector<Account> accoun
 //Đẩy account đã đăng ký thành công vào file, gọi hàm này khi thao tác chức năng đăng ký
 void Registration(Account &acc, int userFilter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
     system("cls");
-    
+    cout << "Welcome to Registration screen!\n";
     cout << "Username: ";
     getline(cin, acc.username, '\n');
     cout << "Password: ";
@@ -233,14 +200,14 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> &accoun
     loadAllUser("SignUp.txt", accounts);
     initUserFilter(userFilter, n, accounts);
     
-    cout << dye(successColor, "Ket thuc registration\n");
+    cout << dye(successColor, "You have successfully registered!\n");
     
     Sleep(beforeSwitchScreen);
 }
 
 void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass){
     system("cls");
-    
+    cout << "Welcome to Multiple Registration screen!\n";
     cout << "Input the amount of registration: ";
     int amount;
     cin >> amount;
@@ -248,21 +215,22 @@ void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &ac
     
     for (int i = 0; i < amount; i++)
         Registration(acc, filter, n,  accounts, weakPassFilter, nPass, weakPass);
-        
+
+    cout << dye(successColor, "You have done all registration!\n");    
     Sleep(beforeSwitchScreen);
 }
 
 void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers){
     system("cls");
     
-    cout << "Welcome to login screen.\n";
-    cout << "Input your username: ";
+    cout << "Welcome to Login screen!\n";
+    cout << "Username: ";
     cin >> acc.username;
-    cout << "Input your password: ";
+    cout << "Password: ";
     cin >> acc.password;
     
     if (!checkHash(acc.username, filter, n)){
-        cout << dye(errorColor, "Not on our database.\n");
+        cout << dye(errorColor, "This Username isn't on our database.\n");
         
         Sleep(beforeSwitchScreen);
         return;
@@ -288,18 +256,14 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     }
     
     string password;
-    cout << "Input your new password: ";
+    cout << "Input your new Password: ";
     password = acc.password;
     cin >> acc.password;
     
     while (!checkPassword(acc, weakPassFilter, nPass, weakPass)) {
-
-        // cin.clear();
-        // cin.ignore();
         cout << dye(errorColor, "\nPlease re-enter your password!\n");
-        cout << "Password: ";
+        cout << "Input your new Password: ";
         password = acc.password;
-        // getline(cin, acc.password, '\n');
         cin >> acc.password;
     }
     
@@ -307,30 +271,19 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     string individualLine = "";
     fstream file("SignUp.txt", ios::in);
     while (getline(file, individualLine)){
-        // cout << individualLine << endl;
         if (individualLine.find(acc.username) != string::npos){
-            // cout << individualLine.find(password) << "\n";
             individualLine.replace(individualLine.find(password), password.size(), acc.password);
-            // cout << "Password found\n";
         }
-            
-        // cout << ">>" << individualLine << "<<\n";
-        
-        if (individualLine != "\n");
-            // allContent += individualLine + "\n";
-        
     }
-    
+
     file.close();
     
     file.open("SignUp.txt", ios::out);
-    
     file << allContent;
     cout << allContent << "\n";
-    
     file.close();
     
     cout << dye(successColor, "Password changed successfully.\n");
-    
+
     Sleep(beforeSwitchScreen);
 }
