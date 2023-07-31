@@ -23,7 +23,7 @@ int main() {
     // Vector Mật khẩu yếu
     vector<string> weakPass;
 
-    loadAllUser("SignUp.txt", accounts);
+    loadAllUser("UserDatabase.txt", accounts);
     initUserFilter(usernameFilter, n, accounts);
     loadAllWeakPassword("Weak-Pass.txt", weakPass);
     initPassFilter(weakPassFilter, n, weakPass);

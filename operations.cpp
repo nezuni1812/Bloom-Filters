@@ -192,12 +192,12 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> &accoun
     ofs.close();
 
     //Đẩy account vào file
-    ofstream out("SignUp.txt", ios::app);
+    ofstream out("UserDatabase.txt", ios::app);
     out << acc.username << " " << acc.password << endl;
     
     out.close();
     
-    loadAllUser("SignUp.txt", accounts);
+    loadAllUser("UserDatabase.txt", accounts);
     initUserFilter(userFilter, n, accounts);
     
     cout << dye(successColor, "You have successfully registered!\n");
@@ -205,18 +205,51 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> &accoun
     Sleep(beforeSwitchScreen);
 }
 
+void AutoRegistration(Account &acc, int userFilter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
+
+    ofstream ofs("Fail.txt", ios::app);
+    bool isFailed = !checkRegister(acc, userFilter, n, accounts, weakPassFilter, nPass, weakPass);
+    if (isFailed) {
+        ofs << acc.username << " " << acc.password << endl;
+        
+    }
+    ofs.close();
+    
+    if (isFailed)
+        return;
+
+    //Đẩy account vào file
+    ofstream out("UserDatabase.txt", ios::app);
+    out << acc.username << " " << acc.password << endl;
+    
+    out.close();
+    
+    loadAllUser("UserDatabase.txt", accounts);
+    initUserFilter(userFilter, n, accounts);
+}
+
 void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass){
     system("cls");
-    cout << "Welcome to Multiple Registration screen!\n";
-    cout << "Input the amount of registration: ";
-    int amount;
-    cin >> amount;
-    cin.ignore();
     
-    for (int i = 0; i < amount; i++)
-        Registration(acc, filter, n,  accounts, weakPassFilter, nPass, weakPass);
-
-    cout << dye(successColor, "You have done all registration!\n");    
+    vector<Account> newUsers;
+    vector<Account> validUser = accounts;
+    
+    loadAllUser("SignUp.txt", newUsers);
+    
+    cout << newUsers.size() << endl;
+    
+    for (int i = 0; i < newUsers.size(); i++){
+        cout << "Username: " << newUsers[i].username << "\nPassword: " << newUsers[i].password << "\n";
+        
+        AutoRegistration(newUsers[i], filter, n, accounts, weakPassFilter, nPass, weakPass);
+        loadAllUser("UserDatabase.txt", accounts);
+        initUserFilter(filter, n, accounts);
+        
+        Sleep(beforeSwitchScreen);
+    }
+    
+    cout << "Multiple Registration done!\n";
+        
     Sleep(beforeSwitchScreen);
 }
 
@@ -269,18 +302,26 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     
     string allContent = "";
     string individualLine = "";
-    fstream file("SignUp.txt", ios::in);
+    fstream file("UserDatabase.txt", ios::in);
     while (getline(file, individualLine)){
         if (individualLine.find(acc.username) != string::npos){
             individualLine.replace(individualLine.find(password), password.size(), acc.password);
         }
+            
+        // cout << ">>" << individualLine << "<<\n";
+        
+        if (individualLine != "\n");
+            allContent += individualLine + "\n";
+        
     }
 
     file.close();
     
-    file.open("SignUp.txt", ios::out);
+    file.open("UserDatabase.txt", ios::out);
+    
     file << allContent;
-    cout << allContent << "\n";
+    // cout << allContent << "\n";
+    
     file.close();
     
     cout << dye(successColor, "Password changed successfully.\n");
