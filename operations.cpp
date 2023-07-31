@@ -19,7 +19,6 @@ using namespace std;
 int beforeSwitchScreen = 800;
 
 string errorColor = "#cf1717";
-
 string successColor = "#008022";
 
 // Reference: https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
@@ -133,13 +132,6 @@ bool checkUsername(string user, int filter[], int n, vector<Account> accounts) {
             }
     }
     
-    return true;
-}
-
-bool doContain(string whole, string inside){
-    if (toLower(whole).find(toLower(inside)) != string::npos)
-        return false;
-        
     return true;
 }
 
