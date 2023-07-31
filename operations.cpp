@@ -22,15 +22,20 @@ int beforeSwitchScreen = 800;
 // Hashing cho bit array: nhận một string -> return một hash
 // Thay đổi số p để đưa ra các hash khác nhau
 int polyNominalRollingHashing(string a, long n, long long p = 19, bool debug = false){
-    unsigned long long hash = 0;
+    long long hash = 0;
+    long long power = 1;
     for (int i = 0; i < a.size(); i++){
         long long toNum = a[i];
-        hash += toNum * pow(p, i);
-        hash %= n;
+        
+        hash = (hash + toNum * power)%n;
+        power = (power * p)%n;
+        // hash %= n;
         if (debug)
-            cout << a[i] << ":" << hash << "\n";
+            cout << a[i] << ":" << pow(p, i) << "\n";
     }
     
+    
+    // cout << "Hash with p = " << p << ": " << hash % n << "\n";
     return hash % n;
 }
 

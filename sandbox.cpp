@@ -29,30 +29,46 @@ void fileInAndOut(){
 
 int polyNominalRollingHashing(string a, long n, long long p = 53, bool debug = false){
     long long hash = 0;
+    long long power = 1;
     for (int i = 0; i < a.size(); i++){
         long long toNum = a[i];
-        hash += toNum * pow(p, i);
-        hash %= n;
+        
+        hash = (hash + toNum * power)%n;
+        power = (power * p)%n;
+        // hash %= n;
         if (debug)
             cout << a[i] << ":" << pow(p, i) << "\n";
     }
     
     
+    // cout << "Hash with p = " << p << ": " << hash % n << "\n";
     return hash % n;
 }
 
 bool checkHash(string a, int filter[],  int n){
-    int pos1 = polyNominalRollingHashing(a, n, 19, true), pos2 = polyNominalRollingHashing(a, n, 23, true), pos3 = polyNominalRollingHashing(a, n, 7, true);
+    int pos1 = polyNominalRollingHashing(a, n, 53, false), pos2 = polyNominalRollingHashing(a, n, 11, false), pos3 = polyNominalRollingHashing(a, n, 7, false);
     
     return !(filter[pos1] == 0 || filter[pos2] == 0 || filter[pos3] == 0);
 }
 
 void insertBloom(string a, int filter[], int n){
-    int pos1 = polyNominalRollingHashing(a, n), pos2 = polyNominalRollingHashing(a, n, 23), pos3 = polyNominalRollingHashing(a, n, 7);
+    int pos1 = polyNominalRollingHashing(a, n), pos2 = polyNominalRollingHashing(a, n, 11), pos3 = polyNominalRollingHashing(a, n, 7);
     
     filter[pos1] = 1;
     filter[pos2] = 1;
     filter[pos3] = 1;
+}
+
+int h2(string s)
+{
+    long long hash = 1;
+    long long power = 19;
+    for (int i = 0; i < s.size(); i++){
+        hash = (hash + power * s[i]) % 500;
+        cout << s[i] << ":" << hash << "\n";
+        power = power * 19 % 500;
+    }
+     return hash % 500;
 }
 
 void testBloom(){
@@ -87,6 +103,15 @@ void testBloom(){
 int main(){
     
     testBloom();
+    
+    // string word  = "";
+    // while (word != "-1"){
+    //     cout << "Input a word: ";
+    //     cin >> word;
+        
+    //     // for (int i = 0; i < word.size(); i++)
+    //         cout << h2(word) << endl;
+    // }
     
     // fstream file("inandout.txt", ios::out | ios::in);
     
