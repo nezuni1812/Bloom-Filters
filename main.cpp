@@ -10,7 +10,7 @@ int main() {
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
     
-    const int n = 500;
+    const int n = 10000;
     // Bộ lọc tên User
     int usernameFilter[n] = {0};
 
@@ -27,6 +27,7 @@ int main() {
     initUserFilter(usernameFilter, n, accounts);
     loadAllWeakPassword("Weak-Pass.txt", weakPass);
     initPassFilter(weakPassFilter, n, weakPass);
+
 
     int mode = -1;
     Account acc;

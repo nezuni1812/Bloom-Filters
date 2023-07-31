@@ -7,6 +7,77 @@
 
 using namespace std;
 
+int h1(string a, int n = 10007){
+    // https://theartincode.stanis.me/008-djb2/
+    long long hash = 5381;
+
+    for (int i = 0; i < a.size(); i++){
+        hash = (((hash << 5) + hash) + a[i]) % n; /* Equivalent to: (hash * 33 + a[i]) % n but it faster*/
+        cout << a[i] << ":" << hash << endl;
+    }
+
+    return hash;
+}
+
+int hold(string a, int n){
+    long long hash = 1;
+    int p = 311;
+    long long power = 19;
+    for (int i = 0; i < a.size(); i++){
+        hash = (hash + power * a[i]) % n;
+        cout << a[i] << ":" << hash << "\n";
+        power = power * 19 % n;
+    }
+    
+    return hash % n;
+}
+
+int h2(string a, int n = 10007){
+    // https://viblo.asia/p/giai-thuat-so-khop-chuoi-rolling-hash-Ljy5V3kMKra#_2-so-sanh-hai-chuoi-ki-tu-bang-ma-hash-3
+    long long hash = 0;
+    int base = 311;
+
+    for (int i = 0; i < a.size(); ++i)
+        hash = (hash * base + (int)a[i]) % n;
+
+    return hash;
+}
+
+int h3(string a, int n = 10007){
+    // http://www.cse.yorku.ca/~oz/hash.html
+    long long hash = 0;
+
+    for (int i = 0; i < a.size(); i++)
+        hash = (a[i] + (hash << 6) + (hash << 16) - hash) % n; /*  Actual hash function: hash(i) = hash(i - 1) * 65599 + str[i]; */
+
+    return hash % n;
+}
+
+int h4(string a, int n = 10007){
+    long long hash = 53;
+    
+    for (int i = 0; i < a.size(); i++){
+        hash = (hash * 37 + a[i]) % n;
+    }
+    
+    return hash % n;
+}
+
+int h5(string a, int n = 10007){
+    long long hash = 71;
+    int p = 1;
+    int base = 59;
+    
+    for (int i = 0; i < a.size(); i++){
+        hash = (hash + (a[i]*base)) % n;
+        base *= p;
+    }
+    
+    return hash % n;
+}
+
+
+
 void fileInAndOut(){
     fstream file("test.txt", ios::in | ios::out);
     
@@ -59,17 +130,6 @@ void insertBloom(string a, int filter[], int n){
     filter[pos3] = 1;
 }
 
-int h2(string s)
-{
-    long long hash = 1;
-    long long power = 19;
-    for (int i = 0; i < s.size(); i++){
-        hash = (hash + power * s[i]) % 500;
-        cout << s[i] << ":" << hash << "\n";
-        power = power * 19 % 500;
-    }
-     return hash % 500;
-}
 
 void testBloom(){
     /* 
@@ -102,16 +162,16 @@ void testBloom(){
 
 int main(){
     
-    testBloom();
+    // testBloom();
     
-    // string word  = "";
-    // while (word != "-1"){
-    //     cout << "Input a word: ";
-    //     cin >> word;
+    string word  = "";
+    while (word != "-1"){
+        cout << "Input a word: ";
+        cin >> word;
         
-    //     // for (int i = 0; i < word.size(); i++)
-    //         cout << h2(word) << endl;
-    // }
+        // for (int i = 0; i < word.size(); i++)
+            cout << h5(word) << endl;
+    }
     
     // fstream file("inandout.txt", ios::out | ios::in);
     
