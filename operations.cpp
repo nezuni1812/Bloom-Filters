@@ -41,14 +41,14 @@ int polyNominalRollingHashing(string a, long n, long long p = 19, bool debug = f
 
 // Kiểm tra xem có phần tử trùng trong filter Bloom không
 bool checkHash(string a, int filter[],  int n){
-    int pos1 = polyNominalRollingHashing(a, n, 19), pos2 = polyNominalRollingHashing(a, n, 23), pos3 = polyNominalRollingHashing(a, n, 7);
+    int pos1 = polyNominalRollingHashing(a, n, 53), pos2 = polyNominalRollingHashing(a, n, 31), pos3 = polyNominalRollingHashing(a, n, 23);
     
     return !(filter[pos1] == 0 || filter[pos2] == 0 || filter[pos3] == 0);
 }
 
 // Thêm một phần tử vào filter Bloom: đánh dấu thành bit 1 ở 3 vị trí trên bit array
 void insertBloom(string a, int filter[], int n){
-    int pos1 = polyNominalRollingHashing(a, n), pos2 = polyNominalRollingHashing(a, n, 23), pos3 = polyNominalRollingHashing(a, n, 7);
+    int pos1 = polyNominalRollingHashing(a, n, 53), pos2 = polyNominalRollingHashing(a, n, 31), pos3 = polyNominalRollingHashing(a, n, 23);
     
     filter[pos1] = 1;
     filter[pos2] = 1;

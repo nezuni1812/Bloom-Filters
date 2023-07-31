@@ -41,18 +41,18 @@ int polyNominalRollingHashing(string a, long n, long long p = 53, bool debug = f
     }
     
     
-    // cout << "Hash with p = " << p << ": " << hash % n << "\n";
+    cout << "Hash with p = " << p << ": " << hash % n << "\n";
     return hash % n;
 }
 
 bool checkHash(string a, int filter[],  int n){
-    int pos1 = polyNominalRollingHashing(a, n, 53, false), pos2 = polyNominalRollingHashing(a, n, 11, false), pos3 = polyNominalRollingHashing(a, n, 7, false);
+    int pos1 = polyNominalRollingHashing(a, n, 53, false), pos2 = polyNominalRollingHashing(a, n, 31, false), pos3 = polyNominalRollingHashing(a, n, 23, false);
     
     return !(filter[pos1] == 0 || filter[pos2] == 0 || filter[pos3] == 0);
 }
 
 void insertBloom(string a, int filter[], int n){
-    int pos1 = polyNominalRollingHashing(a, n), pos2 = polyNominalRollingHashing(a, n, 11), pos3 = polyNominalRollingHashing(a, n, 7);
+    int pos1 = polyNominalRollingHashing(a, n, 53), pos2 = polyNominalRollingHashing(a, n, 31), pos3 = polyNominalRollingHashing(a, n, 23);
     
     filter[pos1] = 1;
     filter[pos2] = 1;
