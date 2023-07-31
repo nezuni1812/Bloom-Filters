@@ -1,2 +1,3 @@
 // Remove tracking for .exe files
 *.exe
+sandbox.cpp
