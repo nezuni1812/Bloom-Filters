@@ -88,14 +88,14 @@ void initPassFilter(int filter[], int n, vector<string> data){
 bool checkUsername(string user, int filter[], int n, vector<Account> accounts) {
     //Check độ dài
     if (user.length() <= 5 || user.length() >= 10) {
-        cout << "Your username must be longer than 5 characters and shorter than 10 characters.\n";
+        cout << dye(errorColor, "Your username must be longer than 5 characters and shorter than 10 characters.\n");
         return false;
     }
 
     //Check xem có space '_' không
     for (int i = 0; i < user.length(); i++)
         if (user[i] == ' ') {
-            cout << "Your username must not contain any spaces.\n";
+            cout << dye(errorColor, "Your username must not contain any spaces.\n");
             return false;
         }
         
@@ -103,7 +103,7 @@ bool checkUsername(string user, int filter[], int n, vector<Account> accounts) {
     if (checkHash(user, filter, n)){
         for (int i = 0; i < accounts.size(); i++)
             if (accounts[i].username == user){
-                cout << "Your username is already registered.\n";
+                cout << dye(errorColor, "Your username is already registered.\n");
                 return false;
             }
     }
@@ -114,12 +114,12 @@ bool checkUsername(string user, int filter[], int n, vector<Account> accounts) {
 bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> weakPass) {
     //Check độ dài
     if (acc.password.length() <= 10 || acc.password.length() >= 20) {
-        cout << "Your Password must be longer than 10 characters and shorter than 20 characters.\n";
+        cout << dye(errorColor, "Your password must be longer than 10 characters and shorter than 20 characters.\n");
         return false;
     }
 
     if (acc.password == acc.username) {
-        cout << "Your Password can not be the same as your Username.\n";
+        cout << dye(errorColor, "Your password can not be the same as your username.\n");
         return false;
     }
 
@@ -144,7 +144,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
     }
 
     if (!upper || !lower || !num || !specialchar) {
-        cout << "Your Password must contain uppercase, lowercase, numbers and special characters.\n";
+        cout << dye(errorColor, "Your password must contain uppercase, lowercase, numbers and special characters.\n");
         return false;
     }
 
@@ -152,7 +152,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
         for (int i = 0; i < weakPass.size(); i++){
             // cout << "Weak password suspected.\n";
             if (weakPass[i] == acc.password) {
-                cout << "Your Password is a weak one.\n";
+                cout << dye(errorColor, "Your password is a weak one.\n");
                 return false;
             }
         }
@@ -248,7 +248,7 @@ void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &ac
         Sleep(beforeSwitchScreen);
     }
     
-    cout << "Multiple Registration done!\n";
+    cout << dye(successColor, "Multiple Registration done!\n");
         
     Sleep(beforeSwitchScreen);
 }
