@@ -18,6 +18,10 @@ using namespace std;
 // Time before switching to a new screen
 int beforeSwitchScreen = 800;
 
+string errorColor = "#cf1717";
+
+string successColor = "#008022";
+
 // Reference: https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
 // Hashing cho bit array: nhận một string -> return một hash
 // Thay đổi số p để đưa ra các hash khác nhau
@@ -191,7 +195,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
 
 bool checkRegister(Account &acc, int userFilter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
     if (checkUsername(acc.username, userFilter, n, accounts) && checkPassword(acc, weakPassFilter, nPass, weakPass)) {
-        cout << "You have successfully registered!\n";
+        cout << dye(successColor, "You have successfully registered!\n");
         acc.isLoggedIn = true;
         return true;
     }
@@ -199,7 +203,7 @@ bool checkRegister(Account &acc, int userFilter[], int n, vector<Account> accoun
 }
 
 //Đẩy account đã đăng ký thành công vào file, gọi hàm này khi thao tác chức năng đăng ký
-void Registration(Account &acc, int userFilter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
+void Registration(Account &acc, int userFilter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass) {
     system("cls");
     
     cout << "Username: ";
@@ -211,7 +215,7 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> account
     while (!checkRegister(acc, userFilter, n, accounts, weakPassFilter, nPass, weakPass)) {
         ofs << acc.username << " " << acc.password << endl;
 
-        cout << dye("#cf1717", "\nPlease re-enter your username and password!\n");
+        cout << dye(errorColor, "\nPlease re-enter your username and password!\n");
         cout << "Username: ";
         getline(cin, acc.username, '\n');
         cout << "Password: ";
@@ -226,12 +230,15 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> account
     
     out.close();
     
-    cout << dye("#008022", "Ket thuc registration\n");
+    loadAllUser("SignUp.txt", accounts);
+    initUserFilter(userFilter, n, accounts);
+    
+    cout << dye(successColor, "Ket thuc registration\n");
     
     Sleep(beforeSwitchScreen);
 }
 
-void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass){
+void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass){
     system("cls");
     
     cout << "Input the amount of registration: ";
@@ -255,7 +262,7 @@ void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers){
     cin >> acc.password;
     
     if (!checkHash(acc.username, filter, n)){
-        cout << dye("#cf1717", "Not on our database.\n");
+        cout << dye(errorColor, "Not on our database.\n");
         
         Sleep(beforeSwitchScreen);
         return;
@@ -263,7 +270,7 @@ void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers){
     
     for (int i = 0; i < allUsers.size(); i++)
         if (acc.username == allUsers[i].username && acc.password == allUsers[i].password){
-            cout << dye("#008022", "Login successfully.\n");
+            cout << dye(successColor, "Login successfully.\n");
             acc.password = allUsers[i].password;
             acc.isLoggedIn = true;
             
@@ -275,7 +282,7 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     system("cls");
     
     if (!acc.isLoggedIn){
-        cout << dye("#cf1717", "You haven't logged in yet.\n");
+        cout << dye(errorColor, "You haven't logged in yet.\n");
         Sleep(beforeSwitchScreen);
         return;
     }
@@ -289,7 +296,7 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
 
         // cin.clear();
         // cin.ignore();
-        cout << dye("#cf1717", "\nPlease re-enter your password!\n");
+        cout << dye(errorColor, "\nPlease re-enter your password!\n");
         cout << "Password: ";
         password = acc.password;
         // getline(cin, acc.password, '\n');
@@ -302,15 +309,15 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     while (getline(file, individualLine)){
         // cout << individualLine << endl;
         if (individualLine.find(acc.username) != string::npos){
-            cout << individualLine.find(password) << "\n";
+            // cout << individualLine.find(password) << "\n";
             individualLine.replace(individualLine.find(password), password.size(), acc.password);
-            cout << "Password found\n";
+            // cout << "Password found\n";
         }
             
-        cout << ">>" << individualLine << "<<\n";
+        // cout << ">>" << individualLine << "<<\n";
         
-        if (individualLine != "\n")
-            allContent += individualLine + "\n";
+        if (individualLine != "\n");
+            // allContent += individualLine + "\n";
         
     }
     
@@ -323,7 +330,7 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     
     file.close();
     
-    cout << dye("#008022", "Password changed successfully.\n");
+    cout << dye(successColor, "Password changed successfully.\n");
     
     Sleep(beforeSwitchScreen);
 }
