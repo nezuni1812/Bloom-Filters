@@ -1,6 +1,3 @@
-#include <Windows.h>
-
-// #include "Header.h"
 #include "operations.cpp"
 
 // Weak pass src:
@@ -31,35 +28,39 @@ int main() {
     loadAllWeakPassword("Weak-Pass.txt", weakPass);
     initPassFilter(weakPassFilter, n, weakPass);
 
-    int mode = 0;
+    int mode = -1;
     Account acc;
-    while (mode != -1) {
-        system("cls");
+    system("cls");
+    while (mode != 0) {
         
-        cout << "Choose a mode\n"
+        cout << "Choose a mode:\n"
                 "1 for Register\n"
-                "2 for Changing password\n"
-                "3 for Multiple Registration\n"
-                "4 for Login\n";
+                "2 for Multiple Registration\n"
+                "3 for Login\n"
+                "4 for Changing password\n"
+                "0 for Exit Program\n";
         cin >> mode;
         cin.ignore();
-
-        if (mode == -1)
-            break;
 
         switch (mode) {
             case 1:
                 Registration(acc, usernameFilter, n, accounts, weakPassFilter, n, weakPass);
                 break;
             case 2:
-                changePassword(acc, usernameFilter, n, weakPassFilter, n, weakPass);
-                break;
-            case 4:
-                LogIn(acc, usernameFilter, n, accounts);
+                MultipleRegistration(acc, usernameFilter, n, accounts, weakPassFilter, n, weakPass);
                 break;
             case 3:
-                // acc, usernameFilter, n,  accounts, weakPassFilter, n, weakPass
-                MultipleRegistration(acc, usernameFilter, n, accounts, weakPassFilter, n, weakPass);
+                LogIn(acc, usernameFilter, n, accounts);
+                break;
+            case 4:
+                changePassword(acc, usernameFilter, n, weakPassFilter, n, weakPass);
+                break;
+            case 0:
+                cout << "You have exited the program!\n";
+                break;
+            default: 
+                system("cls");      
+                cout << "Invalid Choice! Please choose a number from 0 to 5 only.\n";
                 break;
         }
     }
