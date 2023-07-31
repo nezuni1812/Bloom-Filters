@@ -236,8 +236,6 @@ void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &ac
     
     loadAllUser("SignUp.txt", newUsers);
     
-    cout << newUsers.size() << endl;
-    
     for (int i = 0; i < newUsers.size(); i++){
         cout << "Username: " << newUsers[i].username << "\nPassword: " << newUsers[i].password << "\n";
         
