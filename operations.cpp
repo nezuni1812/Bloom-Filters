@@ -138,11 +138,10 @@ void AutoRegistration(Account &acc, int userFilter[], int n, vector<Account> &ac
     //Đẩy account vào file
     ofstream out("UserDatabase.txt", ios::app);
     out << acc.username << " " << acc.password << endl;
-    
     out.close();
     
-    loadAllUser("UserDatabase.txt", accounts);
-    initUserFilter(userFilter, n, accounts);
+    accounts.push_back(acc);
+    insertBloom(acc.username, userFilter, n);
 }
 
 //Gọi hàm này khi thao tác chức năng đa đăng ký
@@ -157,9 +156,7 @@ void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &ac
         cout << "Username: " << newUsers[i].username << "\nPassword: " << newUsers[i].password << "\n";
         
         AutoRegistration(newUsers[i], filter, n, accounts, weakPassFilter, nPass, weakPass);
-        loadAllUser("UserDatabase.txt", accounts);
-        initUserFilter(filter, n, accounts);
-        
+
         // Thêm khoảng cách giữa các tài khoản
         cout << "\n";
         
