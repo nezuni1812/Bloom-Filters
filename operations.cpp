@@ -116,9 +116,6 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> &accoun
     out.close();
     
     accounts.push_back(acc);
-    for (int i = 0; i < accounts.size(); i++) {
-        cout << accounts[i].username << endl;
-    }
     insertBloom(acc.username, userFilter, n);
     
     cout << dye(successColor, "You have successfully registered!\n");
