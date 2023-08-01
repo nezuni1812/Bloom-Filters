@@ -10,7 +10,7 @@ int main() {
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
     
-    const int n = 10000;
+    const int n = 10007;
     // Bộ lọc tên User
     int usernameFilter[n] = {0};
 

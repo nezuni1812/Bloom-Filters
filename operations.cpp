@@ -43,15 +43,23 @@ int h1(string a, int n = 10007){
     return hash;
 }
 
-int h2(string a, int n = 10007){
-    // https://viblo.asia/p/giai-thuat-so-khop-chuoi-rolling-hash-Ljy5V3kMKra#_2-so-sanh-hai-chuoi-ki-tu-bang-ma-hash-3
+int h2(string a, int n = 10007, bool debug = false){
     long long hash = 0;
-    int base = 311;
-
-    for (int i = 0; i < a.size(); ++i)
-        hash = (hash * base + (int)a[i]) % n;
-
-    return hash;
+    long long power = 1;
+    long long p = 311;
+    for (int i = 0; i < a.size(); i++){
+        long long toNum = a[i];
+        
+        hash = (hash + toNum * power)%n;
+        power = (power * p)%n;
+        // hash %= n;
+        if (debug)
+            cout << a[i] << ":" << power << "\n";
+    }
+    
+    
+    // cout << "Hash with p = " << p << ": " << hash % n << "\n";
+    return hash % n;
 }
 
 int h3(string a, int n = 10007){

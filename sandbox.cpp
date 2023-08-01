@@ -98,7 +98,7 @@ void fileInAndOut(){
     file.close();
 }
 
-int polyNominalRollingHashing(string a, long n, long long p = 53, bool debug = false){
+int polyNominalRollingHashing(string a, long n, long long p = 311, bool debug = true){
     long long hash = 0;
     long long power = 1;
     for (int i = 0; i < a.size(); i++){
@@ -108,11 +108,11 @@ int polyNominalRollingHashing(string a, long n, long long p = 53, bool debug = f
         power = (power * p)%n;
         // hash %= n;
         if (debug)
-            cout << a[i] << ":" << pow(p, i) << "\n";
+            cout << a[i] << ":" << power << "\n";
     }
     
     
-    cout << "Hash with p = " << p << ": " << hash % n << "\n";
+    // cout << "Hash with p = " << p << ": " << hash % n << "\n";
     return hash % n;
 }
 
@@ -170,7 +170,7 @@ int main(){
         cin >> word;
         
         // for (int i = 0; i < word.size(); i++)
-            cout << h5(word) << endl;
+            cout << polyNominalRollingHashing(word, 10007) << endl;
     }
     
     // fstream file("inandout.txt", ios::out | ios::in);
