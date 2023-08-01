@@ -1,3 +1,5 @@
+#ifndef something
+#define something
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -34,3 +36,4 @@ void AutoRegistration(Account &acc, int userFilter[], int n, vector<Account> &ac
 void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass);
 void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers);
 void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int nPass, vector<string> weakPass);
+#endif
