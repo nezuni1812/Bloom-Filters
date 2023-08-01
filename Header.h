@@ -1,5 +1,8 @@
 #include <iostream>
+#include <string>
+#include <fstream>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -9,7 +12,12 @@ struct Account {
     bool isLoggedIn = false;
 };
 
-int polyNominalRollingHashing(string a, long n, long long p, bool debug);
+int h1(string a, int n);
+int h2(string a, int n);
+int h3(string a, int n);
+int h4(string a, int n);
+int h5(string a, int n);
+
 bool checkHash(string a, int filter[],  int n);
 void insertBloom(string a, int filter[], int n);
 void loadAllUser(string fileName, vector<Account> &names);
@@ -22,6 +30,7 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
 bool checkRegister(Account &acc, int userFilter[], int n, vector<Account> accounts, int weakPassFilter[], int nPass, vector<string> weakPass);
 
 void Registration(Account &acc, int userFilter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass);
+void AutoRegistration(Account &acc, int userFilter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass);
 void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &accounts, int weakPassFilter[], int nPass, vector<string> weakPass);
 void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers);
 void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int nPass, vector<string> weakPass);
