@@ -25,7 +25,7 @@ int main() {
 
     loadAllUser("UserDatabase.txt", accounts);
     initUserFilter(usernameFilter, n, accounts);
-    loadAllWeakPassword("Weak-Pass.txt", weakPass);
+    loadAllWeakPassword("WeakPass.txt", weakPass);
     initPassFilter(weakPassFilter, n, weakPass);
 
 

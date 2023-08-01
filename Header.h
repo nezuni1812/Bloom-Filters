@@ -1,5 +1,5 @@
-#ifndef something
-#define something
+#ifndef HEADER
+#define HEADER
 #include <iostream>
 #include <string>
 #include <fstream>

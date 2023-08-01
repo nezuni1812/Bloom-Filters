@@ -12,7 +12,7 @@ int h1(string a, int n = 10007){
 }
 
 int h2(string a, int n = 10007){
-    // Reference: https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
+    // https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
     long long hash = 0;
     long long power = 1;
     long long p = 311;
