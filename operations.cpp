@@ -160,6 +160,9 @@ void MultipleRegistration(Account &acc, int filter[], int n, vector<Account> &ac
         loadAllUser("UserDatabase.txt", accounts);
         initUserFilter(filter, n, accounts);
         
+        // Thêm khoảng cách giữa các tài khoản
+        cout << "\n";
+        
         Sleep(beforeSwitchScreen);
     }
     
