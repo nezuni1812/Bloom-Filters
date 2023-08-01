@@ -88,8 +88,6 @@ void insertBloom(string a, int filter[], int n){
 void loadAllUser(string fileName, vector<Account> &names){
     ifstream in(fileName.c_str());
     
-    names.clear();
-    
     Account acc;
     while (in >> acc.username){
         in >> acc.password;
