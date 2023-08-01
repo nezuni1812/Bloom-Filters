@@ -16,20 +16,7 @@ int beforeSwitchScreen = 800;
 string errorColor = "#cf1717";
 string successColor = "#008022";
 
-// Reference: https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
-// Hashing cho bit array: nhận một string -> return một hash
-// Thay đổi số p để đưa ra các hash khác nhau
-int polyNominalRollingHashing(string a, long n, long long p){
-    long long hash = 0;
-    long long power = 1;
-    for (int i = 0; i < a.size(); i++){
-        long long toNum = a[i];
-        
-        hash = (hash + toNum * power) % n;
-        power = (power * p) % n;
-    }
-    return hash % n;
-}
+
 
 int h1(string a, int n = 10007){
     // https://theartincode.stanis.me/008-djb2/
@@ -43,7 +30,8 @@ int h1(string a, int n = 10007){
     return hash;
 }
 
-int h2(string a, int n = 10007, bool debug = false){
+int h2(string a, int n = 10007){
+    // Reference: https://cp-algorithms.com/string/string-hashing.html#calculation-of-the-hash-of-a-string
     long long hash = 0;
     long long power = 1;
     long long p = 311;
@@ -52,13 +40,9 @@ int h2(string a, int n = 10007, bool debug = false){
         
         hash = (hash + toNum * power)%n;
         power = (power * p)%n;
-        // hash %= n;
-        if (debug)
-            cout << a[i] << ":" << power << "\n";
     }
     
     
-    // cout << "Hash with p = " << p << ": " << hash % n << "\n";
     return hash % n;
 }
 
@@ -84,12 +68,10 @@ int h4(string a, int n = 10007){
 
 int h5(string a, int n = 10007){
     long long hash = 71;
-    int p = 1;
     int base = 59;
     
     for (int i = 0; i < a.size(); i++){
         hash = (hash + (a[i]*base)) % n;
-        base *= p;
     }
     
     return hash % n;
@@ -103,11 +85,7 @@ bool checkHash(string a, int filter[],  int n){
     int pos4 = h4(a, n);
     int pos5 = h5(a, n);
     
-    return !(filter[pos1] == 0 || filter[pos2] == 0 || filter[pos3] == 0/*  || filter[pos4] == 0 || filter[pos5] == 0 */);
-    
-    // int pos1 = polyNominalRollingHashing(a, n, 53), pos2 = polyNominalRollingHashing(a, n, 31), pos3 = polyNominalRollingHashing(a, n, 23);
-    
-    // return !(filter[pos1] == 0 || filter[pos2] == 0 || filter[pos3] == 0);
+    return !(filter[pos1] == 0 || filter[pos2] == 0 || filter[pos3] == 0 || filter[pos4] == 0 || filter[pos5] == 0);
 }
 
 // Thêm một phần tử vào filter Bloom: đánh dấu thành bit 1 ở 5 vị trí trên bit array
@@ -123,12 +101,6 @@ void insertBloom(string a, int filter[], int n){
     filter[pos3] = 1;
     filter[pos4] = 1;
     filter[pos5] = 1;
-    
-    // int pos1 = polyNominalRollingHashing(a, n, 53), pos2 = polyNominalRollingHashing(a, n, 31), pos3 = polyNominalRollingHashing(a, n, 23);
-    
-    // filter[pos1] = 1;
-    // filter[pos2] = 1;
-    // filter[pos3] = 1;
 }
 
 // Lấy thông tin User từ file -> vector
@@ -234,7 +206,6 @@ bool checkPassword (Account acc, int weakPassFilter[], int n, vector<string> wea
 
     if (checkHash(acc.password, weakPassFilter, n)){
         for (int i = 0; i < weakPass.size(); i++){
-            // cout << "Weak password suspected.\n";
             if (weakPass[i] == acc.password) {
                 cout << dye(errorColor, "Your password is a weak one.\n");
                 return false;
@@ -393,7 +364,6 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     file.open("UserDatabase.txt", ios::out);
     
     file << allContent;
-    // cout << allContent << "\n";
     
     file.close();
     
