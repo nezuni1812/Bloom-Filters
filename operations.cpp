@@ -190,15 +190,14 @@ void LogIn(Account &acc, int filter[], int n, vector<Account> allUsers){
         return;
     }
     
-    cout << "a" << endl;
     for (int i = 0; i < allUsers.size(); i++)
         if (acc.username == allUsers[i].username && acc.password == allUsers[i].password){
-            cout << "b" << endl;
             cout << dye(successColor, "Login successfully.\n");
             acc.password = allUsers[i].password;
             acc.isLoggedIn = true;
             
             Sleep(beforeSwitchScreen);
+            return;
         }
 }
 
