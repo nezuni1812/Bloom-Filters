@@ -10,7 +10,7 @@ int main() {
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     SetConsoleMode(hOut, dwMode);
     
-    const int n = 10007;
+    const int n = 10007; //Optimal Size của Bộ lọc
     // Bộ lọc tên User
     int usernameFilter[n] = {0};
 
@@ -46,6 +46,7 @@ int main() {
         switch (mode) {
             case 1:
                 Registration(acc, usernameFilter, n, accounts, weakPassFilter, n, weakPass);
+                system("cls");
                 break;
             case 2:
                 MultipleRegistration(acc, usernameFilter, n, accounts, weakPassFilter, n, weakPass);
