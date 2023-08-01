@@ -115,8 +115,11 @@ void Registration(Account &acc, int userFilter[], int n, vector<Account> &accoun
     
     out.close();
     
-    loadAllUser("UserDatabase.txt", accounts);
-    initUserFilter(userFilter, n, accounts);
+    accounts.push_back(acc);
+    for (int i = 0; i < accounts.size(); i++) {
+        cout << accounts[i].username << endl;
+    }
+    insertBloom(acc.username, userFilter, n);
     
     cout << dye(successColor, "You have successfully registered!\n");
     
@@ -229,7 +232,7 @@ void changePassword(Account &acc, int filter[], int n, int weakPassFilter[], int
     fstream file("UserDatabase.txt", ios::in);
     while (getline(file, individualLine)){
         if (individualLine.find(acc.username) != string::npos){
-            individualLine = acc.username + " " + acc.password + "\n";
+            individualLine = acc.username + " " + acc.password;
         }
             
         if (individualLine != "\n");
